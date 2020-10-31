@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'model/Annuncio.dart';
 import 'view/BachecaView.dart';
+import 'view/SegnalazioneView.dart';
 
 void main() {
   var msgs = [
@@ -21,6 +22,7 @@ void main() {
     home: BachecaView(msgs),
     routes: <String, WidgetBuilder>{
       '/bacheca': (BuildContext context) => BachecaView(msgs),
+      '/segnalazione': (BuildContext context) =>  new SegnalazioneView(),
       // '/login': (BuildContext context) => Login(),
     },
   ));
