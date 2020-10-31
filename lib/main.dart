@@ -5,8 +5,11 @@ import 'view/BachecaView.dart';
 import 'view/LoginView.dart';
 import 'view/OspiteView.dart';
 import 'view/SegnalazioneView.dart';
+import 'view/AccessView.dart';
 
 void main() {
+  List<Annuncio> msgs = [];
+  /*
   var msgs = [
     Annuncio(
         'In sala riunioni ci sono le pizzette per San Raffaele!',
@@ -19,9 +22,11 @@ void main() {
         DateTime.parse('2020-04-02 20:35:44'), 'Mario Russo', Annuncio.URGENT)
   ];
 
+   */
+
   runApp(new MaterialApp(
     title: 'App',
-    home: LoginView(),
+    home: AccessView(),
     // TODO: stabilire un tema generale
     routes: <String, WidgetBuilder>{
       '/bacheca': (BuildContext context) => BachecaView(msgs),

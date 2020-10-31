@@ -14,7 +14,7 @@ class BachecaView extends StatefulWidget {
       widgets.add(AnnuncioWidget(msg));
       widgets.add(SizedBox(height: 15));
     }
-    widgets.removeLast();
+    if (msgs.length > 0) widgets.removeLast();
   }
 
   @override
@@ -31,12 +31,28 @@ class _BachecaViewState extends State<BachecaView> {
           child: Container(
               child: MenuWidget(), padding: EdgeInsets.only(top: 35))),
       backgroundColor: Color(0xfff5f5f5),
-      body: ListView.builder(
-          padding: EdgeInsets.all(30),
-          itemCount: widget.widgets.length,
-          itemBuilder: (context, i) {
-            return widget.widgets[i];
-          }),
+      body: widget.widgets.length == 0
+          ? createLostView()
+          : ListView.builder(
+              padding: EdgeInsets.all(30),
+              itemCount: widget.widgets.length,
+              itemBuilder: (context, i) {
+                return widget.widgets[i];
+              }),
+    );
+  }
+
+  Widget createLostView() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Bacheca Vuota",
+          //style: TextStyle(),
+        ),
+        Image.asset('assets/images/emptyImage.jpg',
+            width: 500.0, height: 500.0),
+      ],
     );
   }
 }
