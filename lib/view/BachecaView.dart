@@ -23,13 +23,16 @@ class _BachecaViewState extends State<BachecaView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            backgroundColor: Color(0xffcccccc),
+            textTheme: TextTheme(
+                headline6: TextStyle(color: Color(0xff444444), fontSize: 20)),
             title: Text('Bacheca'),
+            backgroundColor: Color(0xfff5f5f5),
+            elevation: 0,
             leading: GestureDetector(
                 onTap: () {
                   print('Menu non ancora implementato...');
                 },
-                child: Icon(Icons.menu))),
+                child: Icon(Icons.menu, color: Colors.black))),
         body: ListView.builder(
             padding: EdgeInsets.all(30),
             itemCount: widget.widgets.length,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'model/Annuncio.dart';
 import 'view/BachecaView.dart';
+import 'view/LoginView.dart';
 
 void main() {
   var msgs = [
@@ -18,7 +19,8 @@ void main() {
 
   runApp(new MaterialApp(
     title: 'App',
-    home: BachecaView(msgs),
+    home: LoginView(),
+    // TODO: stabilire un tema generale
     routes: <String, WidgetBuilder>{
       '/bacheca': (BuildContext context) => BachecaView(msgs),
       // '/login': (BuildContext context) => Login(),
