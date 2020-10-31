@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import '../widget/AnnuncioWidget.dart';
+
 import '../model/Annuncio.dart';
+import '../widget/AnnuncioWidget.dart';
 
 class BachecaView extends StatefulWidget {
   final List<Widget> widgets = [];

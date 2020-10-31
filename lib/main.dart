@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'model/Annuncio.dart';
 import 'view/BachecaView.dart';
 import 'view/LoginView.dart';
+import 'view/OspiteView.dart';
 
 void main() {
   var msgs = [
@@ -19,7 +20,7 @@ void main() {
 
   runApp(new MaterialApp(
     title: 'App',
-    home: LoginView(),
+    home: OspiteView(),
     // TODO: stabilire un tema generale
     routes: <String, WidgetBuilder>{
       '/bacheca': (BuildContext context) => BachecaView(msgs),
