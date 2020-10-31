@@ -16,10 +16,9 @@ class _OspiteViewState extends State<OspiteView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: makeAppBar('Ospite'),
-        body: Container(
-            width: double.infinity,
+        backgroundColor: Color(0xfff5f5f5),
+        body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
-            color: Color(0xfff5f5f5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -37,7 +36,7 @@ class _OspiteViewState extends State<OspiteView> {
                           'one time id', oneTimeIdController),
                       SizedBox(height: 25),
                       FormUtils.getButton('Entra', () {
-                        print("omafdsgasdkf lasjfdg");
+                        print('omafdsgasdkf lasjfdg');
                       }),
                     ],
                   ),

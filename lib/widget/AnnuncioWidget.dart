@@ -47,7 +47,7 @@ class AnnuncioWidget extends StatelessWidget {
             color: PRIORITY2COLOR[this.annuncio.priority],
             child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                child: Column(children: <Widget>[
+                child: Column(children: [
                   SizedBox(
                       width: double.infinity,
                       child: Text(annuncio.text,

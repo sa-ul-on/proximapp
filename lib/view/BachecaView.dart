@@ -26,19 +26,18 @@ class _BachecaViewState extends State<BachecaView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: makeAppBar('Bacheca'),
-      drawer: Theme(
-          data: Theme.of(context).copyWith(canvasColor: Color(0xffc9daf8)),
-          child: Container(
-              child: MenuWidget(), padding: EdgeInsets.only(top: 35))),
+      drawer: MenuWidget(),
       backgroundColor: Color(0xfff5f5f5),
-      body: widget.widgets.length == 0
-          ? createLostView()
-          : ListView.builder(
-              padding: EdgeInsets.all(30),
-              itemCount: widget.widgets.length,
-              itemBuilder: (context, i) {
-                return widget.widgets[i];
-              }),
+      body: Padding(
+        padding: EdgeInsets.all(30),
+        child: widget.widgets.length == 0
+            ? createLostView()
+            : ListView.builder(
+                itemCount: widget.widgets.length,
+                itemBuilder: (context, i) {
+                  return widget.widgets[i];
+                }),
+      ),
     );
   }
 
@@ -46,12 +45,8 @@ class _BachecaViewState extends State<BachecaView> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          "Bacheca Vuota",
-          //style: TextStyle(),
-        ),
-        Image.asset('assets/images/emptyImage.jpg',
-            width: 500.0, height: 500.0),
+        Text('Bacheca vuota'),
+        Image.asset('assets/images/emptyImage.jpg', width: 500.0, height: 500.0)
       ],
     );
   }

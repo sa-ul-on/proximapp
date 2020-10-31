@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:proximapp/util/FormUtils.dart';
+
+import '../util/FormUtils.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -14,10 +15,9 @@ class LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            width: double.infinity,
+        backgroundColor: Color(0xfff5f5f5),
+        body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
-            color: Color(0xfff5f5f5),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -42,10 +42,11 @@ class LoginViewState extends State<LoginView> {
                       FormUtils.getButton('Entra', () {
                         var email = emailController.text;
                         var password = passwordController.text;
+                        Navigator.pushReplacementNamed(context, 'bacheca');
                       }),
                       SizedBox(height: 40),
                       FormUtils.getLink('Ospite?', () {
-                        Navigator.pushNamed(context, '/ospite');
+                        Navigator.pushNamed(context, 'ospite');
                       })
                     ],
                   ),

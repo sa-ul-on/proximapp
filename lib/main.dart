@@ -4,12 +4,11 @@ import 'model/Annuncio.dart';
 import 'view/BachecaView.dart';
 import 'view/LoginView.dart';
 import 'view/OspiteView.dart';
+import 'view/RegistraAccessoView.dart';
 import 'view/SegnalazioneView.dart';
-import 'view/AccessView.dart';
+import 'view/SplashScreen.dart';
 
 void main() {
-  List<Annuncio> msgs = [];
-  /*
   var msgs = [
     Annuncio(
         'In sala riunioni ci sono le pizzette per San Raffaele!',
@@ -21,18 +20,16 @@ void main() {
     Annuncio('Quarantena per il reparto NoSQL',
         DateTime.parse('2020-04-02 20:35:44'), 'Mario Russo', Annuncio.URGENT)
   ];
-
-   */
-
   runApp(new MaterialApp(
     title: 'App',
-    home: AccessView(),
+    home: SplashScreen(),
     // TODO: stabilire un tema generale
-    routes: <String, WidgetBuilder>{
-      '/bacheca': (BuildContext context) => BachecaView(msgs),
-      '/segnalazione': (BuildContext context) => new SegnalazioneView(),
-      '/ospite': (BuildContext context) => new OspiteView(),
-      // '/login': (BuildContext context) => Login(),
+    routes: {
+      'login': (BuildContext context) => new LoginView(),
+      'ospite': (BuildContext context) => new OspiteView(),
+      'bacheca': (BuildContext context) => BachecaView(msgs),
+      'segnalazione': (BuildContext context) => new SegnalazioneView(),
+      'registra-accesso': (BuildContext context) => new RegistraAccessoView()
     },
   ));
 }
