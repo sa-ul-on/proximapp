@@ -44,7 +44,9 @@ class LoginViewState extends State<LoginView> {
                         var password = passwordController.text;
                       }),
                       SizedBox(height: 40),
-                      FormUtils.getLink('Ospite?')
+                      FormUtils.getLink('Ospite?', () {
+                        Navigator.pushNamed(context, '/ospite');
+                      })
                     ],
                   ),
                 ),

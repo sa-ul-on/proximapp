@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 
 import '../model/Annuncio.dart';
 import '../widget/AnnuncioWidget.dart';
+import '../widget/AppBarMaker.dart';
+import '../widget/MenuWidget.dart';
 
 class BachecaView extends StatefulWidget {
   final List<Widget> widgets = [];
@@ -23,28 +25,18 @@ class _BachecaViewState extends State<BachecaView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            textTheme: TextTheme(
-                headline6: TextStyle(color: Color(0xff444444), fontSize: 20)),
-            title: Text('Bacheca'),
-            backgroundColor: Color(0xfff5f5f5),
-            elevation: 0,
-            leading: GestureDetector(
-                onTap: () {
-                  print('Menu non ancora implementato...');
-                },
-                child: Icon(Icons.menu, color: Colors.black))),
-        body: ListView.builder(
-            padding: EdgeInsets.all(30),
-            itemCount: widget.widgets.length,
-            itemBuilder: (context, i) {
-              return widget.widgets[i];
-            }),
-        backgroundColor: Color(0xfff5f5f5));
-
-    /*floatingActionButton: FloatingActionButton(
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),*/ // This trailing comma makes auto-formatting nicer for build methods.
+      appBar: makeAppBar('Bacheca'),
+      drawer: Theme(
+          data: Theme.of(context).copyWith(canvasColor: Color(0xffc9daf8)),
+          child: Container(
+              child: MenuWidget(), padding: EdgeInsets.only(top: 35))),
+      backgroundColor: Color(0xfff5f5f5),
+      body: ListView.builder(
+          padding: EdgeInsets.all(30),
+          itemCount: widget.widgets.length,
+          itemBuilder: (context, i) {
+            return widget.widgets[i];
+          }),
+    );
   }
 }

@@ -54,7 +54,7 @@ class FormUtils {
             onPressed: onPressed));
   }
 
-  static Widget getLink(String text) {
+  static Widget getLink(String text, Function onPressed) {
     return SizedBox(
         width: double.infinity,
         child: FlatButton(
@@ -66,6 +66,6 @@ class FormUtils {
                 fontWeight: FontWeight.normal,
               ),
             ),
-            onPressed: () {}));
+            onPressed: onPressed));
   }
 }

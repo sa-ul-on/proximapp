@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:proximapp/util/FormUtils.dart';
+
+import '../util/FormUtils.dart';
+import '../widget/AppBarMaker.dart';
 
 class OspiteView extends StatefulWidget {
   @override
@@ -13,17 +15,7 @@ class _OspiteViewState extends State<OspiteView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            textTheme: TextTheme(
-                headline6: TextStyle(color: Color(0xff444444), fontSize: 20)),
-            title: Text('Ospite'),
-            backgroundColor: Color(0xfff5f5f5),
-            elevation: 0,
-            leading: GestureDetector(
-                onTap: () {
-                  print('Indietro non ancora implementato...');
-                },
-                child: Icon(Icons.arrow_left, color: Colors.black))),
+        appBar: makeAppBar('Ospite'),
         body: Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 30),

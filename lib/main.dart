@@ -4,6 +4,7 @@ import 'model/Annuncio.dart';
 import 'view/BachecaView.dart';
 import 'view/LoginView.dart';
 import 'view/OspiteView.dart';
+import 'view/SegnalazioneView.dart';
 
 void main() {
   var msgs = [
@@ -20,10 +21,12 @@ void main() {
 
   runApp(new MaterialApp(
     title: 'App',
-    home: OspiteView(),
+    home: LoginView(),
     // TODO: stabilire un tema generale
     routes: <String, WidgetBuilder>{
       '/bacheca': (BuildContext context) => BachecaView(msgs),
+      '/segnalazione': (BuildContext context) => new SegnalazioneView(),
+      '/ospite': (BuildContext context) => new OspiteView(),
       // '/login': (BuildContext context) => Login(),
     },
   ));
