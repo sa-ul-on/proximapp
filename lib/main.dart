@@ -9,7 +9,7 @@ import 'view/SegnalazioneView.dart';
 import 'view/SplashScreen.dart';
 
 void main() {
-  var msgs = [
+  List<Annuncio> msgs = [
     Annuncio(
         'In sala riunioni ci sono le pizzette per San Raffaele!',
         DateTime.parse('2020-10-26 09:42:27'),

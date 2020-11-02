@@ -45,7 +45,8 @@ class _BachecaViewState extends State<BachecaView> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Bacheca vuota'),
+        Text('La Bacheca è vuota!',
+            style: TextStyle(fontSize: 20), textAlign: TextAlign.center),
         Image.asset('assets/images/emptyImage.jpg', width: 500.0, height: 500.0)
       ],
     );

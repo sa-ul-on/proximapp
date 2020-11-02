@@ -15,8 +15,8 @@ class RegistraAccessoView extends StatelessWidget {
               children: [
                 Text(
                     'Avvicina il dispositivo al sensore NFC per registrare l\'accesso.',
-                    style:
-                        TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center),
                 Image.asset('assets/images/nfcImage.png',
                     width: 500.0, height: 500.0)
               ],

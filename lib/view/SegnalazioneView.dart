@@ -20,7 +20,7 @@ class _SegnalazioneViewState extends State<SegnalazioneView> {
           child: Column(
             children: [
               Text('Contatta l\'azienda tramite questo form:',
-                  style: TextStyle(fontSize: 17)),
+                  style: TextStyle(fontSize: 20), textAlign: TextAlign.center),
               SizedBox(height: 20),
               Column(
                 children: [
