@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:proximapp/BLEManager.dart';
 
 import '../widget/AppBarMaker.dart';
 
 class RegistraAccessoView extends StatelessWidget {
+  BLEManager bleManager;
+
+  RegistraAccessoView(this.bleManager);
+
+  void registraAccesso() {
+    bleManager.init();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +27,9 @@ class RegistraAccessoView extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                     textAlign: TextAlign.center),
                 Image.asset('assets/images/nfcImage.png',
-                    width: 500.0, height: 500.0)
+                    width: 500.0, height: 500.0),
+                RaisedButton(
+                    child: Text('Registra accesso'), onPressed: registraAccesso)
               ],
             )));
   }

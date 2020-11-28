@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'BLEManager.dart';
 import 'model/Annuncio.dart';
 import 'view/BachecaView.dart';
 import 'view/LoginView.dart';
@@ -9,6 +10,8 @@ import 'view/SegnalazioneView.dart';
 import 'view/SplashScreen.dart';
 
 void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+  var bleManager = BLEManager();
   List<Annuncio> msgs = [
     Annuncio(
         'In sala riunioni ci sono le pizzette per San Raffaele!',
@@ -20,16 +23,17 @@ void main() {
     Annuncio('Quarantena per il reparto NoSQL',
         DateTime.parse('2020-04-02 20:35:44'), 'Mario Russo', Annuncio.URGENT)
   ];
-  runApp(new MaterialApp(
+  runApp(MaterialApp(
     title: 'App',
     home: SplashScreen(),
     // TODO: stabilire un tema generale
     routes: {
-      'login': (BuildContext context) => new LoginView(),
-      'ospite': (BuildContext context) => new OspiteView(),
+      'login': (BuildContext context) => LoginView(),
+      'ospite': (BuildContext context) => OspiteView(),
       'bacheca': (BuildContext context) => BachecaView(msgs),
-      'segnalazione': (BuildContext context) => new SegnalazioneView(),
-      'registra-accesso': (BuildContext context) => new RegistraAccessoView()
+      'segnalazione': (BuildContext context) => SegnalazioneView(),
+      'registra-accesso': (BuildContext context) =>
+          RegistraAccessoView(bleManager)
     },
   ));
 }

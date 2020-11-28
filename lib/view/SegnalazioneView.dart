@@ -26,8 +26,8 @@ class _SegnalazioneViewState extends State<SegnalazioneView> {
                 children: [
                   TextField(
                     maxLines: 12,
-                    decoration: new InputDecoration(
-                      border: new OutlineInputBorder(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                       filled: true,
                       fillColor: Color(0xffa4c2f4),
