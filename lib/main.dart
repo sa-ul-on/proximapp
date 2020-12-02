@@ -8,6 +8,7 @@ import 'view/OspiteView.dart';
 import 'view/RegistraAccessoView.dart';
 import 'view/SegnalazioneView.dart';
 import 'view/SplashScreen.dart';
+import 'BLEManager.dart';
 
 void main() {
   // WidgetsFlutterBinding.ensureInitialized();

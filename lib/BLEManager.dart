@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:beacon_broadcast/beacon_broadcast.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 
 class BLEManager {
   static const String uuid = '35ED98FF-2900-441A-802F-9C398FC199D2';
@@ -14,23 +15,24 @@ class BLEManager {
   static const List<int> extraData = [100];
 
   BeaconBroadcast beaconBroadcast = BeaconBroadcast();
+  FlutterBlue flutterBlue;
 
-  void init() {
-    beaconBroadcast.checkTransmissionSupported().then((beaconStatus) {
-      if (beaconStatus == BeaconStatus.SUPPORTED)
-        print('Device supports transmitting as a beacon');
-      else if (beaconStatus == BeaconStatus.NOT_SUPPORTED_MIN_SDK)
-        print('Android system version on the device is too low (min. is 21)');
-      else if (beaconStatus == BeaconStatus.NOT_SUPPORTED_BLE)
-        print('Device doesn\'t support Bluetooth Low Energy');
-      else if (beaconStatus == BeaconStatus.NOT_SUPPORTED_CANNOT_GET_ADVERTISER)
-        print('Device\'s Bluetooth chipset/driver not supporting transmitting');
-    });
+  void init() async {
+    BeaconStatus beaconStatus =
+        await beaconBroadcast.checkTransmissionSupported();
+    if (beaconStatus == BeaconStatus.SUPPORTED)
+      print('Device supports transmitting as a beacon');
+    else if (beaconStatus == BeaconStatus.NOT_SUPPORTED_MIN_SDK)
+      print('Android system version on the device is too low (min. is 21)');
+    else if (beaconStatus == BeaconStatus.NOT_SUPPORTED_BLE)
+      print('Device doesn\'t support Bluetooth Low Energy');
+    else if (beaconStatus == BeaconStatus.NOT_SUPPORTED_CANNOT_GET_ADVERTISER)
+      print('Device\'s Bluetooth chipset/driver not supporting transmitting');
     beaconBroadcast.getAdvertisingStateChange().listen((isAdvertising) {
       print('advertising state chaged in ' + isAdvertising.toString());
     });
     if (Platform.isIOS) {
-      beaconBroadcast
+      await beaconBroadcast
           .setUUID(uuid)
           .setMajorId(majorId)
           .setMinorId(minorId)
@@ -40,14 +42,36 @@ class BLEManager {
           .start();
       print("ios detected");
     } else {
-      beaconBroadcast
+      await beaconBroadcast
           .setUUID(uuid)
           .setMajorId(majorId)
           .setMinorId(minorId)
           .setTransmissionPower(transmissionPower)
           .start();
       print("android detected");
+      flutterBlue = FlutterBlue.instance;
     }
     print(beaconBroadcast);
+  }
+
+  Stream<BluetoothState> getBLE() {
+    return FlutterBlue.instance.state;
+  }
+
+  void startMonitoring() async {
+    await flutterBlue.startScan();
+  }
+
+  void stopMonitoring() async{
+    await flutterBlue.stopScan();
+  }
+
+  dynamic lookAround() {
+    flutterBlue.scanResults.listen((List<ScanResult> results) {
+      for (ScanResult scan in results) {
+        print(scan);
+        print('');
+      }
+    });
   }
 }
