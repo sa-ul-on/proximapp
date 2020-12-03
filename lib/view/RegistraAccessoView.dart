@@ -7,7 +7,7 @@ import '../widget/AppBarMaker.dart';
 
 class RegistraAccessoView extends StatefulWidget {
   final BLEManager bleManager;
-  bool registrato = false;
+  static bool registrato = false;
 
   RegistraAccessoView(this.bleManager);
 
@@ -25,26 +25,38 @@ class _RegistraAccessoViewState extends State<RegistraAccessoView> {
   void registraAccesso() async {
     await bleManager.init();
     print("INIT DONE");
-    await bleManager.startMonitoring();
-    var x = bleManager.lookAround();
-    print(x);
+    await bleManager.beaconBroadcast.start(); // inizio il broadcasting
+    print(bleManager.beaconBroadcast.isAdvertising());
+
+    bleManager.lookAround();
+
+    // inizio lo scanning
+
+    bleManager.flutterBlue.startScan();
+    print("Scan for devices Started");
   }
 
   void registraUscita() async {
-    await bleManager.stopMonitoring();
+    await bleManager.beaconBroadcast.stop(); // stop broadcasting
+    print("broadcasting stop");
+    await bleManager.flutterBlue.stopScan(); //stop scanning
+    print("monitoring stopped");
+
+    print(bleManager.beaconBroadcast.isAdvertising());
   }
 
   @override
   Widget build(BuildContext context) {
-    var text = widget.registrato ? 'Registra uscita' : 'Registra entrata';
+    var text =
+        RegistraAccessoView.registrato ? 'Registra uscita' : 'Registra entrata';
     var reaction = () {
-      if (widget.registrato)
+      if (RegistraAccessoView.registrato)
         registraUscita();
       else
         registraAccesso();
       setState(() {
-        widget.registrato = !widget.registrato;
-        print(widget.registrato);
+        RegistraAccessoView.registrato = !RegistraAccessoView.registrato;
+        print(RegistraAccessoView.registrato);
       });
       Navigator.pushNamed(context, 'bacheca');
     };

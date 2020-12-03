@@ -51,6 +51,7 @@ class BLEManager {
       print("android detected");
       flutterBlue = FlutterBlue.instance;
     }
+    print(beaconBroadcast.isAdvertising());
     print(beaconBroadcast);
   }
 
@@ -58,19 +59,28 @@ class BLEManager {
     return FlutterBlue.instance.state;
   }
 
-  void startMonitoring() async {
-    await flutterBlue.startScan();
-  }
-
-  void stopMonitoring() async{
-    await flutterBlue.stopScan();
-  }
-
   dynamic lookAround() {
     flutterBlue.scanResults.listen((List<ScanResult> results) {
-      for (ScanResult scan in results) {
-        print(scan);
-        print('');
+      int nDevices = results.length;
+      print("Numero di dispotivi nelle vicinanze $nDevices");
+      for (ScanResult r in results) {
+        // double tx = -115;
+        // double distance = pow(10, (tx - r.rssi) / (10 * 2));
+        // da testare una funzione più accurata per calcolare la distanza
+        print("Ho trovato un dispositivo con:");
+        print(r.advertisementData);
+        // valori null sui dispositivi che stiamo simulando, quando si monitora un vero beacon saranno settati con eg:  .setTransmissionPower(transmissionPower)
+        //print("Nome:" +r.advertisementData.localName);
+        //print("UUID": r.advertisementData.serviceUuids.first);
+        int txPower = r.advertisementData.txPowerLevel;
+        int rssi = r.rssi;
+        print("TxLevel: $txPower");
+        print("Rssi: $rssi");
+
+        if (r.rssi > -50) {
+          print("Sei troppo vicino al dispositivo ");
+          //print(r.advertisementData.localName); null
+        }
       }
     });
   }
