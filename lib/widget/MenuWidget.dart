@@ -19,6 +19,12 @@ class MenuWidget extends StatelessWidget {
                           Navigator.pushNamed(context, 'registra-accesso'),
                     ),
                     ListTile(
+                      leading: Icon(Icons.hail),
+                      title: Text('Registro Attività'),
+                      onTap: () =>
+                          Navigator.pushNamed(context, 'registro-attivita'),
+                    ),
+                    ListTile(
                       leading: Icon(Icons.warning),
                       title: Text('Segnalazione'),
                       onTap: () => Navigator.pushNamed(context, 'segnalazione'),

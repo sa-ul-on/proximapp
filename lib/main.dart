@@ -6,6 +6,7 @@ import 'view/BachecaView.dart';
 import 'view/LoginView.dart';
 import 'view/OspiteView.dart';
 import 'view/RegistraAccessoView.dart';
+import 'view/RegistroAttivitaView.dart';
 import 'view/SegnalazioneView.dart';
 import 'view/SplashScreen.dart';
 import 'BLEManager.dart';
@@ -33,6 +34,7 @@ void main() {
       'ospite': (BuildContext context) => OspiteView(),
       'bacheca': (BuildContext context) => BachecaView(msgs),
       'segnalazione': (BuildContext context) => SegnalazioneView(),
+      'registro-attivita': (BuildContext context) => RegistroAttivitaView(),
       'registra-accesso': (BuildContext context) =>
           RegistraAccessoView(bleManager)
     },
