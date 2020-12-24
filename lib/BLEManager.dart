@@ -20,13 +20,13 @@ class BLEManager {
   void init() async {
     BeaconStatus beaconStatus =
         await beaconBroadcast.checkTransmissionSupported();
-    if (beaconStatus == BeaconStatus.SUPPORTED)
+    if (beaconStatus == BeaconStatus.supported)
       print('Device supports transmitting as a beacon');
-    else if (beaconStatus == BeaconStatus.NOT_SUPPORTED_MIN_SDK)
+    else if (beaconStatus == BeaconStatus.notSupportedMinSdk)
       print('Android system version on the device is too low (min. is 21)');
-    else if (beaconStatus == BeaconStatus.NOT_SUPPORTED_BLE)
+    else if (beaconStatus == BeaconStatus.notSupportedBle)
       print('Device doesn\'t support Bluetooth Low Energy');
-    else if (beaconStatus == BeaconStatus.NOT_SUPPORTED_CANNOT_GET_ADVERTISER)
+    else if (beaconStatus == BeaconStatus.notSupportedCannotGetAdvertiser)
       print('Device\'s Bluetooth chipset/driver not supporting transmitting');
     beaconBroadcast.getAdvertisingStateChange().listen((isAdvertising) {
       print('advertising state chaged in ' + isAdvertising.toString());
