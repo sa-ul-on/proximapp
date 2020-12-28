@@ -3,7 +3,6 @@ import 'Place.dart';
 import 'Tracking.dart';
 
 abstract class IGatheringWs {
-
   // GATHERING
   Future<bool> notifyGathering(int companyId, int t1id, int t2id, int pid,
       double dist, DateTime datetime);
@@ -32,10 +31,9 @@ abstract class IGatheringWs {
   Future<Tracking> createTracking(String firstname, String lastname,
       String address, String hicard, String phone, int userId, int companyId);
 
-  List<Tracking> findTrackingsByCompany(int companyId);
+  Future<List<Tracking>> findTrackingsByCompany(int companyId);
 
-  Tracking findTrackingById(int trackingId, int companyId);
+  Future<Tracking> findTrackingById(int trackingId, int companyId);
 
   Future<bool> deleteTracking(int trackingId, int companyId);
-
 }

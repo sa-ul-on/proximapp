@@ -105,27 +105,94 @@ class RestGatheringWs implements IGatheringWs {
 
   // TRACKING
   @override
-  Future<Tracking> createTracking(String firstname, String lastname,
-      String address, String hicard, String phone, int userId, int companyId) {
-    // TODO: implement createTracking
-    throw UnimplementedError();
+  Future<Tracking> createTracking(
+      String firstname,
+      String lastname,
+      String address,
+      String hicard,
+      String phone,
+      int userId,
+      int companyId) async {
+    try {
+      Response response =
+          await client.post(server + '/trackings/$companyId', body: {
+        'firstname': firstname,
+        'lastname': lastname,
+        'address': address,
+        'hicard': hicard,
+        'phone': phone,
+        'user_id': userId.toString()
+      });
+      var jsonObj = jsonDecode(response.body);
+      int tId = jsonObj['id'];
+      String tFirstname = jsonObj['firstname'];
+      String tLastname = jsonObj['lastname'];
+      String tAddress = jsonObj['address'];
+      String tHicard = jsonObj['hicard'];
+      String tPhone = jsonObj['phone'];
+      int tUserId = jsonObj['userId'];
+      int tCompanyId = jsonObj['companyId'];
+      return Tracking(tId, tFirstname, tLastname, tAddress, tHicard, tPhone,
+          tUserId, tCompanyId);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
-  List<Tracking> findTrackingsByCompany(int companyId) {
-    // TODO: implement findTrackingsByCompany
-    throw UnimplementedError();
+  Future<List<Tracking>> findTrackingsByCompany(int companyId) async {
+    try {
+      List<Tracking> trackings = List();
+      Response response = await client.get(server + '/trackings/$companyId');
+      var jsonList = jsonDecode(response.body);
+      for (var jsonObj in jsonList) {
+        int tId = jsonObj['id'];
+        String tFirstname = jsonObj['firstname'];
+        String tLastname = jsonObj['lastname'];
+        String tAddress = jsonObj['address'];
+        String tHicard = jsonObj['hicard'];
+        String tPhone = jsonObj['phone'];
+        int tUserId = jsonObj['userId'];
+        int tCompanyId = jsonObj['companyId'];
+        Tracking tracking = Tracking(tId, tFirstname, tLastname, tAddress,
+            tHicard, tPhone, tUserId, tCompanyId);
+        trackings.add(tracking);
+      }
+      return trackings;
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
-  Tracking findTrackingById(int trackingId, int companyId) {
-    // TODO: implement findTrackingById
-    throw UnimplementedError();
+  Future<Tracking> findTrackingById(int trackingId, int companyId) async {
+    try {
+      Response response =
+          await client.get(server + '/trackings/$companyId/$trackingId');
+      var jsonObj = jsonDecode(response.body);
+      int tId = jsonObj['id'];
+      String tFirstname = jsonObj['firstname'];
+      String tLastname = jsonObj['lastname'];
+      String tAddress = jsonObj['address'];
+      String tHicard = jsonObj['hicard'];
+      String tPhone = jsonObj['phone'];
+      int tUserId = jsonObj['userId'];
+      int tCompanyId = jsonObj['companyId'];
+      return Tracking(tId, tFirstname, tLastname, tAddress, tHicard, tPhone,
+          tUserId, tCompanyId);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
-  Future<bool> deleteTracking(int trackingId, int companyId) {
-    // TODO: implement deleteTracking
-    throw UnimplementedError();
+  Future<bool> deleteTracking(int trackingId, int companyId) async {
+    try {
+      Response response =
+          await client.delete(server + '/trackings/$companyId/$trackingId');
+      return response.body == 'true';
+    } catch (e) {
+      return false;
+    }
   }
 }
