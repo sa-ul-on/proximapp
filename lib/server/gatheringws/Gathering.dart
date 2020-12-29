@@ -1,7 +1,9 @@
 class Gathering {
   final int id;
   final int placeId;
-  final Map<int, DateTime> trackings;
+  final List<int> trackings;
+  final DateTime startDate, endDate;
 
-  Gathering(this.id, this.placeId, this.trackings);
+  Gathering(
+      this.id, this.placeId, this.trackings, this.startDate, this.endDate);
 }

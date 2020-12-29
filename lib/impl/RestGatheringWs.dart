@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:proximapp/server/gatheringws/Gathering.dart';
 import 'package:proximapp/server/gatheringws/IGatheringWs.dart';
 import 'package:proximapp/server/gatheringws/Place.dart';
@@ -10,19 +11,32 @@ import 'package:proximapp/server/gatheringws/Tracking.dart';
 class RestGatheringWs implements IGatheringWs {
   static String server = 'http://10.0.2.2:8080'; // "localhost" alias for ADV
   static var client = http.Client();
+  static DateFormat formatter = DateFormat('yyyy-MM-dd kk:mm:ss');
 
   // GATHERING
   @override
-  Future<bool> notifyGathering(int companyId, int t1id, int t2id, int pid,
+  Future<Gathering> notifyGathering(int companyId, int t1id, int t2id, int pid,
       double dist, DateTime datetime) async {
-    // TODO: implement notifyGathering
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Gathering>> findGatheringsByCompany(int companyId) async {
-    // TODO: implement findGatheringsByCompany
-    throw UnimplementedError();
+    try {
+      Response response =
+          await client.post(server + '/gatherings/$companyId', body: {
+        't1id': t1id.toString(),
+        't2id': t2id.toString(),
+        'pid': pid.toString(),
+        'dist': dist.toString(),
+        'datetime': formatter.format(datetime)
+      });
+      var jsonObj = jsonDecode(response.body);
+      int id = jsonObj['id'];
+      int placeId = jsonObj['placeId'];
+      List<int> trackings = List();
+      for (var trackingId in jsonObj['trackings']) trackings.add(trackingId);
+      DateTime startDate = DateTime.parse(jsonObj['startDate']);
+      DateTime endDate = DateTime.parse(jsonObj['endDate']);
+      return Gathering(id, placeId, trackings, startDate, endDate);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
@@ -31,15 +45,45 @@ class RestGatheringWs implements IGatheringWs {
       DateTime dateFrom,
       DateTime dateTo,
       List<int> trackingIds,
-      List<int> placeIds) {
-    // TODO: implement findGatheringsByQuery
-    throw UnimplementedError();
+      List<int> placeIds) async {
+    try {
+      List<Gathering> gatherings = List();
+      String url = server + '/gatherings/$companyId/query';
+      List<String> params = List();
+      if (dateFrom != null)
+        params.add('date_from=' + formatter.format(dateFrom));
+      if (dateTo != null) params.add('date_to=' + formatter.format(dateTo));
+      if (trackingIds != null) params.add('trackings=' + trackingIds.join(','));
+      if (placeIds != null) params.add('places=' + placeIds.join(','));
+      if (params.isNotEmpty) url += '?' + params.join('&');
+      Response response = await client.get(url);
+      var jsonList = jsonDecode(response.body);
+      for (var jsonObj in jsonList) {
+        int id = jsonObj['id'];
+        int placeId = jsonObj['placeId'];
+        List<int> trackings = List();
+        for (var trackingId in jsonObj['trackings']) trackings.add(trackingId);
+        DateTime startDate = DateTime.parse(jsonObj['startDate']);
+        DateTime endDate = DateTime.parse(jsonObj['endDate']);
+        Gathering gathering =
+            Gathering(id, placeId, trackings, startDate, endDate);
+        gatherings.add(gathering);
+      }
+      return gatherings;
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
-  Future<bool> deleteGathering(int gatheringId, int companyId) {
-    // TODO: implement deleteGathering
-    throw UnimplementedError();
+  Future<bool> deleteGathering(int gatheringId, int companyId) async {
+    try {
+      Response response =
+          await client.delete(server + '/gatherings/$companyId/$gatheringId');
+      return response.body == 'true';
+    } catch (e) {
+      return false;
+    }
   }
 
   // PLACE

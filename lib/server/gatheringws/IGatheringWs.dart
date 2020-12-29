@@ -4,10 +4,8 @@ import 'Tracking.dart';
 
 abstract class IGatheringWs {
   // GATHERING
-  Future<bool> notifyGathering(int companyId, int t1id, int t2id, int pid,
+  Future<Gathering> notifyGathering(int companyId, int t1id, int t2id, int pid,
       double dist, DateTime datetime);
-
-  Future<List<Gathering>> findGatheringsByCompany(int companyId);
 
   Future<List<Gathering>> findGatheringsByQuery(
       int companyId,
