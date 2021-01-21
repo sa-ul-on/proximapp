@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../Mediator.dart';
 import '../util/FormUtils.dart';
 import '../widget/AppBarMaker.dart';
 
 class OspiteView extends StatefulWidget {
+  final Mediator mediator;
+
+  OspiteView(this.mediator);
+
   @override
   _OspiteViewState createState() => _OspiteViewState();
 }

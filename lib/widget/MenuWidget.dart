@@ -1,6 +1,25 @@
 import 'package:flutter/material.dart';
 
-class MenuWidget extends StatelessWidget {
+import '../Mediator.dart';
+
+class MenuWidget extends StatefulWidget {
+  final Mediator mediator;
+
+  MenuWidget(this.mediator);
+
+  @override
+  State<StatefulWidget> createState() => _MenuWidgetState();
+}
+
+class _MenuWidgetState extends State<MenuWidget> {
+  bool openedWorktime;
+
+  @override
+  void initState() {
+    super.initState();
+    openedWorktime = widget.mediator.isWorktimeOpen();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -14,13 +33,19 @@ class MenuWidget extends StatelessWidget {
                   children: [
                     ListTile(
                       leading: Icon(Icons.nfc),
-                      title: Text('Registra accesso'),
-                      onTap: () =>
-                          Navigator.pushNamed(context, 'registra-accesso'),
+                      title: Text(openedWorktime
+                          ? 'Registra uscita'
+                          : 'Registra entrata'),
+                      onTap: () async {
+                        await Navigator.pushNamed(context, 'registra-accesso');
+                        setState(() {
+                          openedWorktime = widget.mediator.isWorktimeOpen();
+                        });
+                      },
                     ),
                     ListTile(
                       leading: Icon(Icons.hail),
-                      title: Text('Registro Attività'),
+                      title: Text('Registro attività'),
                       onTap: () =>
                           Navigator.pushNamed(context, 'registro-attivita'),
                     ),
@@ -41,7 +66,11 @@ class MenuWidget extends StatelessWidget {
                     ListTile(
                       leading: Icon(Icons.exit_to_app),
                       title: Text('Esci'),
-                      onTap: () => Navigator.pop(context),
+                      onTap: () {
+                        widget.mediator.doLogout();
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(context, 'login');
+                      },
                     )
                   ],
                 )

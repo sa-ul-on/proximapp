@@ -5,6 +5,10 @@ import 'package:proximapp/util/FormUtils.dart';
 import '../widget/AppBarMaker.dart';
 
 class SegnalazioneView extends StatefulWidget {
+  dynamic mediator;
+
+  SegnalazioneView(this.mediator);
+
   @override
   _SegnalazioneViewState createState() => _SegnalazioneViewState();
 }

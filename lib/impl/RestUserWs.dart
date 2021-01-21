@@ -8,8 +8,7 @@ import 'package:proximapp/server/userws/Invite.dart';
 import 'package:proximapp/server/userws/User.dart';
 
 class RestUserWs implements IUserWs {
-  static String server =
-      'http://172.19.194.33:3000'; // "localhost" alias for ADV
+  static String server = 'http://10.0.2.2:3000'; // "localhost" alias for ADV
   static var client = http.Client();
 
   // COMPANY

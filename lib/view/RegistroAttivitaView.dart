@@ -3,15 +3,19 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:proximapp/widget/AppBarMaker.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class RegistroAttivitaView extends StatefulWidget {
-  RegistroAttivitaView({Key key}) : super(key: key);
+import '../Mediator.dart';
 
+class RegistroAttivitaView extends StatefulWidget {
+  final Mediator mediator;
+
+  RegistroAttivitaView(this.mediator);
 
   @override
   _RegistroAttivitaView createState() => _RegistroAttivitaView();
 }
 
-class _RegistroAttivitaView extends State<RegistroAttivitaView> with TickerProviderStateMixin {
+class _RegistroAttivitaView extends State<RegistroAttivitaView>
+    with TickerProviderStateMixin {
   Map<DateTime, List> _events;
   List _selectedEvents;
   AnimationController _animationController;
@@ -27,13 +31,23 @@ class _RegistroAttivitaView extends State<RegistroAttivitaView> with TickerProvi
     String nota = "Dormivo sul lavoro";
 
     _events = {
-      _selectedDay.add(Duration(days: 0)): ['Ingresso Ore: $oraENtrata', 'Uscita Ore: $oraUscita', nota,],
-      _selectedDay.add(Duration(days: -1)): ['Ingresso Ore: ', 'Uscita Ore:', ],
-      _selectedDay.add(Duration(days: -2)): ['Ingresso Ore: ', 'Uscita Ore:', ],
-      _selectedDay.add(Duration(days: -3)): ['Note: permesso visita medica',],
-
+      _selectedDay.add(Duration(days: 0)): [
+        'Ingresso Ore: $oraENtrata',
+        'Uscita Ore: $oraUscita',
+        nota,
+      ],
+      _selectedDay.add(Duration(days: -1)): [
+        'Ingresso Ore: ',
+        'Uscita Ore:',
+      ],
+      _selectedDay.add(Duration(days: -2)): [
+        'Ingresso Ore: ',
+        'Uscita Ore:',
+      ],
+      _selectedDay.add(Duration(days: -3)): [
+        'Note: permesso visita medica',
+      ],
     };
-
 
     _selectedEvents = _events[_selectedDay] ?? [];
     _calendarController = CalendarController();
@@ -43,7 +57,7 @@ class _RegistroAttivitaView extends State<RegistroAttivitaView> with TickerProvi
       duration: const Duration(milliseconds: 400),
     );
     _animationController.forward();
-}
+  }
 
   @override
   void dispose() {
@@ -72,7 +86,7 @@ class _RegistroAttivitaView extends State<RegistroAttivitaView> with TickerProvi
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: makeAppBar('Registra Accesso'),
+      appBar: makeAppBar('Registra attività'),
       backgroundColor: Color(0xfff5f5f5),
       body: Column(
         mainAxisSize: MainAxisSize.max,
@@ -103,7 +117,7 @@ class _RegistroAttivitaView extends State<RegistroAttivitaView> with TickerProvi
       ),
       headerStyle: HeaderStyle(
         formatButtonTextStyle:
-        TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
+            TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
         formatButtonDecoration: BoxDecoration(
           color: Colors.lightBlue,
           borderRadius: BorderRadius.circular(16.0),
@@ -123,8 +137,8 @@ class _RegistroAttivitaView extends State<RegistroAttivitaView> with TickerProvi
         color: _calendarController.isSelected(date)
             ? Colors.brown[500]
             : _calendarController.isToday(date)
-            ? Colors.brown[300]
-            : Colors.blue[400],
+                ? Colors.brown[300]
+                : Colors.blue[400],
       ),
       width: 16.0,
       height: 16.0,
@@ -184,17 +198,17 @@ class _RegistroAttivitaView extends State<RegistroAttivitaView> with TickerProvi
     return ListView(
       children: _selectedEvents
           .map((event) => Container(
-        decoration: BoxDecoration(
-          border: Border.all(width: 0.8),
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        margin:
-        const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        child: ListTile(
-          title: Text(event.toString()),
-          onTap: () => print('$event tapped!'),
-        ),
-      ))
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.8),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                child: ListTile(
+                  title: Text(event.toString()),
+                  onTap: () => print('$event tapped!'),
+                ),
+              ))
           .toList(),
     );
   }

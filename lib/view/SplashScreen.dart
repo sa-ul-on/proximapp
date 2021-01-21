@@ -3,12 +3,31 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../Mediator.dart';
+
 class SplashScreen extends StatefulWidget {
+  final Mediator mediator;
+
+  SplashScreen(this.mediator);
+
   @override
   SplashScreenState createState() => SplashScreenState();
 }
 
 class SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    widget.mediator.init();
+    Timer(Duration(seconds: 3), () {
+      if (widget.mediator.isUserLogged()) {
+        Navigator.pushReplacementNamed(context, 'bacheca');
+      } else {
+        Navigator.pushReplacementNamed(context, 'login');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,13 +48,5 @@ class SplashScreenState extends State<SplashScreen> {
                 )
               ],
             )));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, 'login');
-    });
   }
 }

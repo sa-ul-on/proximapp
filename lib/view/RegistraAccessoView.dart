@@ -1,67 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:proximapp/BLEManager.dart';
 
+import '../Mediator.dart';
 import '../util/FormUtils.dart';
 import '../widget/AppBarMaker.dart';
 
 class RegistraAccessoView extends StatefulWidget {
-  final BLEManager bleManager;
-  static bool registrato = false;
+  final Mediator mediator;
 
-  RegistraAccessoView(this.bleManager);
+  RegistraAccessoView(this.mediator);
 
   @override
-  _RegistraAccessoViewState createState() {
-    return _RegistraAccessoViewState(bleManager);
-  }
+  _RegistraAccessoViewState createState() => _RegistraAccessoViewState();
 }
 
 class _RegistraAccessoViewState extends State<RegistraAccessoView> {
-  final BLEManager bleManager;
+  /*void onClickAccept() {
+    if (RegistraAccessoView.registrato)
+      registraUscita();
+    else
+      registraEntrata();
+    setState(() {
+      RegistraAccessoView.registrato = !RegistraAccessoView.registrato;
+      print(RegistraAccessoView.registrato);
+    });
+    Navigator.pushNamed(context, 'bacheca');
+  }*/
 
-  _RegistraAccessoViewState(this.bleManager);
-
-  void registraAccesso() async {
-    await bleManager.init();
-    print("INIT DONE");
-    await bleManager.beaconBroadcast.start(); // inizio il broadcasting
-    print(bleManager.beaconBroadcast.isAdvertising());
-
-    bleManager.lookAround();
-
-    // inizio lo scanning
-
-    bleManager.flutterBlue.startScan();
-    print("Scan for devices Started");
+  void registraEntrata() async {
+    widget.mediator.openWorktime();
+    Navigator.pop(context);
   }
 
   void registraUscita() async {
-    await bleManager.beaconBroadcast.stop(); // stop broadcasting
-    print("broadcasting stop");
-    await bleManager.flutterBlue.stopScan(); //stop scanning
-    print("monitoring stopped");
-
-    print(bleManager.beaconBroadcast.isAdvertising());
+    widget.mediator.closeWorktime();
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    var text =
-        RegistraAccessoView.registrato ? 'Registra uscita' : 'Registra entrata';
-    var reaction = () {
-      if (RegistraAccessoView.registrato)
-        registraUscita();
-      else
-        registraAccesso();
-      setState(() {
-        RegistraAccessoView.registrato = !RegistraAccessoView.registrato;
-        print(RegistraAccessoView.registrato);
-      });
-      Navigator.pushNamed(context, 'bacheca');
-    };
+    var textButton;
+    var onClickButton;
+    if (widget.mediator.isWorktimeOpen()) {
+      textButton = 'Registra uscita';
+      onClickButton = registraUscita;
+    } else {
+      textButton = 'Registra entrata';
+      onClickButton = registraEntrata;
+    }
     return Scaffold(
-        appBar: makeAppBar('Registra Accesso'),
+        appBar: makeAppBar('Registra entrata'),
         backgroundColor: Color(0xfff5f5f5),
         body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
@@ -69,12 +57,13 @@ class _RegistraAccessoViewState extends State<RegistraAccessoView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                    'Avvicina il dispositivo al sensore NFC per registrare l\'accesso.',
+                    'Avvicina il dispositivo al sensore NFC per registrare '
+                    'l\'accesso.',
                     style: TextStyle(fontSize: 20),
                     textAlign: TextAlign.center),
                 Image.asset('assets/images/nfcImage.png',
                     width: 500.0, height: 500.0),
-                FormUtils.getButton(text, reaction),
+                FormUtils.getButton(textButton, onClickButton),
               ],
             )));
   }

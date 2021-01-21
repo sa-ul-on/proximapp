@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../Mediator.dart';
 import '../model/Annuncio.dart';
 import '../widget/AnnuncioWidget.dart';
 import '../widget/AppBarMaker.dart';
 import '../widget/MenuWidget.dart';
 
 class BachecaView extends StatefulWidget {
+  final Mediator mediator;
   final List<Widget> widgets = [];
 
-  BachecaView(List<Annuncio> msgs) {
+  BachecaView(this.mediator) {
+    List<Annuncio> msgs = mediator.getAnnunci();
     for (final msg in msgs) {
       widgets.add(AnnuncioWidget(msg));
       widgets.add(SizedBox(height: 15));
@@ -24,9 +27,10 @@ class BachecaView extends StatefulWidget {
 class _BachecaViewState extends State<BachecaView> {
   @override
   Widget build(BuildContext context) {
+    print("building bacheca...");
     return Scaffold(
       appBar: makeAppBar('Bacheca'),
-      drawer: MenuWidget(),
+      drawer: MenuWidget(widget.mediator),
       backgroundColor: Color(0xfff5f5f5),
       body: Padding(
         padding: EdgeInsets.all(30),
