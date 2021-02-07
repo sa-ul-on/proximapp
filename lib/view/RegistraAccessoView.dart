@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:toast/toast.dart';
 
 import '../Mediator.dart';
 import '../util/FormUtils.dart';
@@ -15,26 +16,36 @@ class RegistraAccessoView extends StatefulWidget {
 }
 
 class _RegistraAccessoViewState extends State<RegistraAccessoView> {
-  /*void onClickAccept() {
-    if (RegistraAccessoView.registrato)
-      registraUscita();
-    else
-      registraEntrata();
-    setState(() {
-      RegistraAccessoView.registrato = !RegistraAccessoView.registrato;
-      print(RegistraAccessoView.registrato);
-    });
-    Navigator.pushNamed(context, 'bacheca');
-  }*/
+  var doableRegistration = true;
 
   void registraEntrata() async {
-    widget.mediator.openWorktime();
-    Navigator.pop(context);
+    setState(() {
+      doableRegistration = false;
+    });
+    bool res = await widget.mediator.openWorktime();
+    setState(() {
+      doableRegistration = true;
+    });
+    if (res) {
+      Navigator.pop(context);
+    } else {
+      FormUtils.showToast('Impossibile registrare entrata', context, 3, false);
+    }
   }
 
   void registraUscita() async {
-    widget.mediator.closeWorktime();
-    Navigator.pop(context);
+    setState(() {
+      doableRegistration = false;
+    });
+    bool res = await widget.mediator.closeWorktime();
+    setState(() {
+      doableRegistration = true;
+    });
+    if (res) {
+      Navigator.pop(context);
+    } else {
+      FormUtils.showToast('Impossibile registrare uscita', context, 3);
+    }
   }
 
   @override
@@ -63,7 +74,8 @@ class _RegistraAccessoViewState extends State<RegistraAccessoView> {
                     textAlign: TextAlign.center),
                 Image.asset('assets/images/nfcImage.png',
                     width: 500.0, height: 500.0),
-                FormUtils.getButton(textButton, onClickButton),
+                FormUtils.getButton(
+                    textButton, onClickButton, doableRegistration),
               ],
             )));
   }

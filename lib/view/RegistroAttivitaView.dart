@@ -28,7 +28,7 @@ class _RegistroAttivitaView extends State<RegistroAttivitaView>
     final _selectedDay = DateTime.now();
     int oraENtrata = 9;
     int oraUscita = 18;
-    String nota = "Dormivo sul lavoro";
+    String nota = 'Dormivo sul lavoro';
 
     _events = {
       _selectedDay.add(Duration(days: 0)): [

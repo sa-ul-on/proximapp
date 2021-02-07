@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:toast/toast.dart';
 
 class FormUtils {
   static Widget getInputText(
@@ -35,7 +36,8 @@ class FormUtils {
     );
   }
 
-  static Widget getButton(String text, Function onPressed) {
+  static Widget getButton(String text, Function onPressed,
+      [bool enabled = true]) {
     return SizedBox(
         width: double.infinity,
         child: FlatButton(
@@ -51,7 +53,8 @@ class FormUtils {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             padding: EdgeInsets.symmetric(vertical: 15),
             color: Color(0xff6d9eeb),
-            onPressed: onPressed));
+            disabledColor: Color(0xff5c8dda),
+            onPressed: enabled ? onPressed : null));
   }
 
   static Widget getLink(String text, Function onPressed) {
@@ -67,5 +70,11 @@ class FormUtils {
               ),
             ),
             onPressed: onPressed));
+  }
+
+  static void showToast(String msg, BuildContext context, int duration,
+      [bool bottom = true]) {
+    Toast.show(msg, context,
+        duration: duration, gravity: bottom ? Toast.BOTTOM : Toast.TOP);
   }
 }

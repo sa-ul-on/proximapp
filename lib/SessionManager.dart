@@ -5,7 +5,7 @@ import 'LoginData.dart';
 class SessionManager {
   SharedPreferences prefs;
 
-  void init() async {
+  Future<void> init() async {
     prefs = await SharedPreferences.getInstance();
   }
 

@@ -5,15 +5,53 @@ import 'model/Annuncio.dart';
 import 'server/userws/IUserWs.dart';
 import 'server/userws/User.dart';
 import 'server/worktimews/IGatheringWs.dart';
+import 'server/worktimews/Worktime.dart';
 
 class Mediator {
   BLEManager bleManager;
 
-  void init() {
-    print("initing in splash screen...");
+  void init() async {
     // WidgetsFlutterBinding.ensureInitialized();
     bleManager = BLEManager();
-    initUserSide();
+    bleManager.setCallback(_notifyGathering);
+    // Init user side
+    await sessionManager.init();
+    if (sessionManager.isUserLogged()) {
+      LoginData loginData = await sessionManager.getLoggedUser();
+      User user =
+          await userWs.findUserById(loginData.userId, loginData.companyId);
+      if (user != null) {
+        loginData.userId = user.id;
+        loginData.companyId = user.companyId;
+        loginData.email = user.email;
+        loginData.roles = user.roles;
+        await sessionManager.setLoggedUser(loginData);
+      } else {
+        await sessionManager.removeLoggedUser();
+      }
+    }
+    // Init worktime side
+    if (sessionManager.isUserLogged()) {
+      LoginData loginData = await sessionManager.getLoggedUser();
+      List<Worktime> worktimes = await worktimeWs.findWorktimesByQuery(
+          loginData.companyId, null, null, [loginData.userId]);
+      if (worktimes != null && worktimes.isNotEmpty) {
+        if (worktimes[0].dateTo == null) {
+          worktime = worktimes[0];
+        }
+      }
+    }
+  }
+
+  void _notifyGathering(int secondTrackingId, double distance) async {
+    print('assembramento in corso...');
+    /*
+    int pid = 1;
+    LoginData loginData = await sessionManager.getLoggedUser();
+    var now = DateTime.now();
+    gatheringWs.notifyGathering(loginData.companyId, loginData.userId,
+        secondTrackingId, pid, distance, now);
+    */
   }
 
   getBleManager() {
@@ -42,24 +80,6 @@ class Mediator {
   IUserWs userWs;
   SessionManager sessionManager = SessionManager();
 
-  void initUserSide() async {
-    await sessionManager.init();
-    if (sessionManager.isUserLogged()) {
-      LoginData loginData = await sessionManager.getLoggedUser();
-      User user =
-          await userWs.findUserById(loginData.userId, loginData.companyId);
-      if (user != null) {
-        loginData.userId = user.id;
-        loginData.companyId = user.companyId;
-        loginData.email = user.email;
-        loginData.roles = user.roles;
-        await sessionManager.setLoggedUser(loginData);
-      } else {
-        await sessionManager.removeLoggedUser();
-      }
-    }
-  }
-
   void setUserWs(IUserWs userWs) {
     this.userWs = userWs;
   }
@@ -86,52 +106,48 @@ class Mediator {
   }
 
   ////////////////////////////  WORKTIME MANAGEMENT ////////////////////////////
-  bool worktimeRunning = false;
   IWorktimeWs worktimeWs;
+  Worktime worktime;
 
   void setWorktimeWs(IWorktimeWs worktimeWs) {
     this.worktimeWs = worktimeWs;
   }
 
   bool isWorktimeOpen() {
-    return worktimeRunning;
+    return worktime != null;
   }
 
-  void openWorktime() {
-    if (!worktimeRunning) {
-      // worktimeWs.notifyWorktime(userId, companyId, datetime, inOrOut);
-      /*await bleManager.init();
-    print("INIT DONE");
-    await bleManager.beaconBroadcast.start(); // inizio il broadcasting
-    print(bleManager.beaconBroadcast.isAdvertising());
-
-    bleManager.lookAround();
-
-    // inizio lo scanning
-
-    bleManager.flutterBlue.startScan();
-    print("Scan for devices Started");*/
-      worktimeRunning = true;
-      print('open worktime');
+  Future<bool> openWorktime() async {
+    if (isUserLogged() && !isWorktimeOpen()) {
+      LoginData loginData = await sessionManager.getLoggedUser();
+      var newWorktime = await worktimeWs.notifyWorktime(
+          loginData.userId, loginData.companyId, DateTime.now(), true);
+      // TODO: trackingId
+      if (newWorktime == null || newWorktime.dateTo != null) {
+        return false;
+      }
+      bleManager.startBroadcastAndScan(loginData.userId);
+      // Ok
+      worktime = newWorktime;
     } else {
       print('worktime already open');
     }
+    return true;
   }
 
-  void closeWorktime() {
-    if (worktimeRunning) {
-      /*var bleManager = widget.bleManager;
-
-    await bleManager.beaconBroadcast.stop(); // stop broadcasting
-    print("broadcasting stop");
-    await bleManager.flutterBlue.stopScan(); //stop scanning
-    print("monitoring stopped");
-
-    print(bleManager.beaconBroadcast.isAdvertising());*/
-      worktimeRunning = false;
-      print('close worktime');
+  Future<bool> closeWorktime() async {
+    if (isWorktimeOpen()) {
+      await bleManager.stopBroadcastAndScan();
+      LoginData loginData = await sessionManager.getLoggedUser();
+      var newWorktime = await worktimeWs.notifyWorktime(
+          loginData.userId, loginData.companyId, DateTime.now(), false);
+      if (newWorktime == null || newWorktime.dateTo == null) {
+        return false;
+      }
+      worktime = null;
     } else {
       print('no worktime available');
     }
+    return true;
   }
 }

@@ -18,6 +18,7 @@ class LoginViewState extends State<LoginView> {
   final passwordController = TextEditingController();
 
   String textError;
+  bool doableLogin = true;
 
   @override
   void initState() {
@@ -54,18 +55,23 @@ class LoginViewState extends State<LoginView> {
                       FormUtils.getButton('Entra', () async {
                         setState(() {
                           textError = 'Connessione in corso...';
+                          doableLogin = false;
                         });
                         var email = emailController.text;
                         var password = passwordController.text;
-                        bool status = await widget.mediator.doLogin(email, password);
+                        bool status =
+                            await widget.mediator.doLogin(email, password);
+                        setState(() {
+                          doableLogin = true;
+                        });
                         if (status) {
-                          Navigator.pushReplacementNamed(context, 'bacheca');
+                          Navigator.pushReplacementNamed(context, 'dashboard');
                         } else {
                           setState(() {
                             textError = 'Credenziali errate';
                           });
                         }
-                      }),
+                      }, doableLogin),
                       SizedBox(height: 40),
                       Text(
                         textError,

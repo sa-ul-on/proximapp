@@ -9,9 +9,12 @@ import 'package:proximapp/server/gatheringws/Place.dart';
 import 'package:proximapp/server/gatheringws/Tracking.dart';
 
 class RestGatheringWs implements IGatheringWs {
-  static String server = 'http://10.0.2.2:8080'; // "localhost" alias for ADV
   static var client = http.Client();
+  static const timeoutDuration = Duration(seconds: 5);
   static DateFormat formatter = DateFormat('yyyy-MM-dd kk:mm:ss');
+  String server;
+
+  RestGatheringWs(this.server);
 
   // GATHERING
   @override
@@ -25,7 +28,7 @@ class RestGatheringWs implements IGatheringWs {
         'pid': pid.toString(),
         'dist': dist.toString(),
         'datetime': formatter.format(datetime)
-      });
+      }).timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       var jsonObj = jsonDecode(response.body);
       int id = jsonObj['id'];
       int placeId = jsonObj['placeId'];
@@ -56,7 +59,9 @@ class RestGatheringWs implements IGatheringWs {
       if (trackingIds != null) params.add('trackings=' + trackingIds.join(','));
       if (placeIds != null) params.add('places=' + placeIds.join(','));
       if (params.isNotEmpty) url += '?' + params.join('&');
-      Response response = await client.get(url);
+      Response response = await client
+          .get(url)
+          .timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       var jsonList = jsonDecode(response.body);
       for (var jsonObj in jsonList) {
         int id = jsonObj['id'];
@@ -78,8 +83,9 @@ class RestGatheringWs implements IGatheringWs {
   @override
   Future<bool> deleteGathering(int gatheringId, int companyId) async {
     try {
-      Response response =
-          await client.delete(server + '/gatherings/$companyId/$gatheringId');
+      Response response = await client
+          .delete(server + '/gatherings/$companyId/$gatheringId')
+          .timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       return response.body == 'true';
     } catch (e) {
       return false;
@@ -91,7 +97,9 @@ class RestGatheringWs implements IGatheringWs {
   Future<Place> createPlace(String name, int companyId) async {
     try {
       Response response = await client
-          .post(server + '/places/$companyId', body: {'name': name});
+          .post(server + '/places/$companyId', body: {'name': name}).timeout(
+              timeoutDuration,
+              onTimeout: () => throw 'timeout');
       var jsonObj = jsonDecode(response.body);
       int pId = jsonObj['id'];
       String pName = jsonObj['name'];
@@ -106,7 +114,9 @@ class RestGatheringWs implements IGatheringWs {
   Future<List<Place>> findPlacesByCompany(int companyId) async {
     try {
       List<Place> places = List();
-      Response response = await client.get(server + '/places/$companyId');
+      Response response = await client
+          .get(server + '/places/$companyId')
+          .timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       var jsonList = jsonDecode(response.body);
       for (var jsonObj in jsonList) {
         int id = jsonObj['id'];
@@ -124,8 +134,9 @@ class RestGatheringWs implements IGatheringWs {
   @override
   Future<Place> findPlaceById(int placeId, int companyId) async {
     try {
-      Response response =
-          await client.get(server + '/places/$companyId/$placeId');
+      Response response = await client
+          .get(server + '/places/$companyId/$placeId')
+          .timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       var jsonPlace = jsonDecode(response.body);
       int pId = jsonPlace['id'];
       String pName = jsonPlace['name'];
@@ -139,8 +150,9 @@ class RestGatheringWs implements IGatheringWs {
   @override
   Future<bool> deletePlace(int placeId, int companyId) async {
     try {
-      Response response =
-          await client.delete(server + '/places/$companyId/$placeId');
+      Response response = await client
+          .delete(server + '/places/$companyId/$placeId')
+          .timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       return response.body == 'true';
     } catch (e) {
       return false;
@@ -166,7 +178,7 @@ class RestGatheringWs implements IGatheringWs {
         'hicard': hicard,
         'phone': phone,
         'user_id': userId.toString()
-      });
+      }).timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       var jsonObj = jsonDecode(response.body);
       int tId = jsonObj['id'];
       String tFirstname = jsonObj['firstname'];
@@ -187,7 +199,9 @@ class RestGatheringWs implements IGatheringWs {
   Future<List<Tracking>> findTrackingsByCompany(int companyId) async {
     try {
       List<Tracking> trackings = List();
-      Response response = await client.get(server + '/trackings/$companyId');
+      Response response = await client
+          .get(server + '/trackings/$companyId')
+          .timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       var jsonList = jsonDecode(response.body);
       for (var jsonObj in jsonList) {
         int tId = jsonObj['id'];
@@ -211,8 +225,9 @@ class RestGatheringWs implements IGatheringWs {
   @override
   Future<Tracking> findTrackingById(int trackingId, int companyId) async {
     try {
-      Response response =
-          await client.get(server + '/trackings/$companyId/$trackingId');
+      Response response = await client
+          .get(server + '/trackings/$companyId/$trackingId')
+          .timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       var jsonObj = jsonDecode(response.body);
       int tId = jsonObj['id'];
       String tFirstname = jsonObj['firstname'];
@@ -232,8 +247,9 @@ class RestGatheringWs implements IGatheringWs {
   @override
   Future<bool> deleteTracking(int trackingId, int companyId) async {
     try {
-      Response response =
-          await client.delete(server + '/trackings/$companyId/$trackingId');
+      Response response = await client
+          .delete(server + '/trackings/$companyId/$trackingId')
+          .timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       return response.body == 'true';
     } catch (e) {
       return false;

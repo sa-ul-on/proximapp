@@ -7,9 +7,12 @@ import 'package:proximapp/server/worktimews/IGatheringWs.dart';
 import 'package:proximapp/server/worktimews/Worktime.dart';
 
 class RestWorktimeWs implements IWorktimeWs {
-  static String server = 'http://10.0.2.2:8080'; // "localhost" alias for ADV
   static var client = http.Client();
+  static const timeoutDuration = Duration(seconds: 5);
   static DateFormat formatter = DateFormat('yyyy-MM-dd kk:mm:ss');
+  String server;
+
+  RestWorktimeWs(this.server);
 
   @override
   Future<Worktime> notifyWorktime(
@@ -20,7 +23,7 @@ class RestWorktimeWs implements IWorktimeWs {
         'user_id': userId.toString(),
         'date': formatter.format(datetime),
         'in_or_out': inOrOut.toString()
-      });
+      }).timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       var jsonObj = jsonDecode(response.body);
       int id = jsonObj['id'];
       DateTime dateFrom = DateTime.parse(jsonObj['dateFrom']);
@@ -45,7 +48,9 @@ class RestWorktimeWs implements IWorktimeWs {
       if (dateTo != null) params.add('date_to=' + formatter.format(dateTo));
       if (userIds != null) params.add('user_ids=' + userIds.join(','));
       if (params.isNotEmpty) url += '?' + params.join('&');
-      Response response = await client.get(url);
+      Response response = await client
+          .get(url)
+          .timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       var jsonList = jsonDecode(response.body);
       List<Worktime> worktimes = List();
       for (var jsonObj in jsonList) {
@@ -68,8 +73,9 @@ class RestWorktimeWs implements IWorktimeWs {
   @override
   Future<bool> deleteWorktime(int worktimeId, int companyId) async {
     try {
-      Response response =
-          await client.delete(server + '/worktimes/$companyId/$worktimeId');
+      Response response = await client
+          .delete(server + '/worktimes/$companyId/$worktimeId')
+          .timeout(timeoutDuration, onTimeout: () => throw 'timeout');
       return response.body == 'true';
     } catch (e) {
       return false;

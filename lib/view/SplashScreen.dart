@@ -7,6 +7,7 @@ import '../Mediator.dart';
 
 class SplashScreen extends StatefulWidget {
   final Mediator mediator;
+  int duration = 1;
 
   SplashScreen(this.mediator);
 
@@ -18,14 +19,16 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    widget.mediator.init();
-    Timer(Duration(seconds: 3), () {
-      if (widget.mediator.isUserLogged()) {
-        Navigator.pushReplacementNamed(context, 'bacheca');
-      } else {
-        Navigator.pushReplacementNamed(context, 'login');
-      }
-    });
+    asyncInit();
+  }
+
+  void asyncInit() async {
+    await widget.mediator.init();
+    if (widget.mediator.isUserLogged()) {
+      Navigator.pushReplacementNamed(context, 'dashboard');
+    } else {
+      Navigator.pushReplacementNamed(context, 'login');
+    }
   }
 
   @override

@@ -27,7 +27,6 @@ class BachecaView extends StatefulWidget {
 class _BachecaViewState extends State<BachecaView> {
   @override
   Widget build(BuildContext context) {
-    print("building bacheca...");
     return Scaffold(
       appBar: makeAppBar('Bacheca'),
       drawer: MenuWidget(widget.mediator),

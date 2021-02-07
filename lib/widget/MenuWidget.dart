@@ -52,7 +52,7 @@ class _MenuWidgetState extends State<MenuWidget> {
                     ListTile(
                       leading: Icon(Icons.warning),
                       title: Text('Segnalazione'),
-                      onTap: () => Navigator.pushNamed(context, 'segnalazione'),
+                      onTap: () => Navigator.pushNamed(context, 'gathering-alert'),
                     ),
                   ],
                 ),
